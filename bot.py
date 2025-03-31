@@ -25,21 +25,21 @@ user_completions = {}
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
 
-@bot.slash_command(name="hunt")
-async def hunt(ctx, monster: str):
+@bot.command(name="hunt")
+async def hunt(ctx, *, monster: str):
     if monster not in monsters:
-        await ctx.send(f"{monster} is not a valid monster. Please choose a valid monster.", ephemeral=True)
+        await ctx.send(f"{monster} is not a valid monster. Please choose a valid monster.")
         return
     
     user_id = ctx.author.id
     user_hunts[user_id] = monster
-    await ctx.send(f"You have started hunting for {monster}. Good luck!", ephemeral=True)
+    await ctx.send(f"You have started hunting for {monster}. Good luck!")
 
-@bot.slash_command(name="hunt-end")
+@bot.command(name="hunt-end")
 async def hunt_end(ctx):
     user_id = ctx.author.id
     if user_id not in user_hunts:
-        await ctx.send("You are not currently hunting any monster.", ephemeral=True)
+        await ctx.send("You are not currently hunting any monster.")
         return
     
     monster = user_hunts.pop(user_id)
@@ -47,10 +47,10 @@ async def hunt_end(ctx):
         user_completions[user_id] = []
     
     user_completions[user_id].append(monster)
-    await ctx.send(f"Congratulations! You have successfully hunted {monster} and it has been added to your collection.", ephemeral=True)
+    await ctx.send(f"Congratulations! You have successfully hunted {monster} and it has been added to your collection.")
 
-@bot.slash_command(name="monster-completion")
-async def monster_completion(ctx, user: discord.User = None):
+@bot.command(name="monster-completion")
+async def monster_completion(ctx, *, user: discord.User = None):
     user = user or ctx.author
     user_id = user.id
     completions = user_completions.get(user_id, [])
